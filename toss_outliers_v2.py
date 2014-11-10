@@ -4,29 +4,41 @@ from create_mat_barcode_fit_dic import *
 import sys
 import matplotlib.pyplot as plt
 
+# input: dictionary of fitness scores corresponding to a codon/position
+# barcode value:[fitness score, standard error, p-value]
 
-#input: dictionary of fitness scores corresponding to a codon/position
-#key: barcode value: fitness score
-#THIS IS FOR A LARGE NUMBER OF BARCODES PER CODON
+# Needs the following pickles in the working folder.
+# translate.pkl, codon_ypos.pkl, aa_to_num_sorted.pkl, allele_dic_with_WT.pkl
 
+# Needs create_mat_barcode_fit_dict in the working folder.
 
-#sort input barcode dictionary to find barcodes corresponding to a codon/position
+# Run
+# cd to file + dependencies
+# python toss_outliers_v2.py your_fitness_pkl.pkl
+
+# Find the variance of the stop and wt codon fitness values
 def find_var_stop_wt(pos_codon_file):
+  # Establish fitness matrix, # aa, # codons, wt sequence
   fit_matrix = pos_codon_file
   p, codon = np.shape(fit_matrix)
   wtseq = 'ATGCAGATTTTCGTCAAGACTTTGACCGGTAAAACCATAACATTGGAAGTTGAATCTTCCGATACCATCGACAACGTTAAGTCGAAAATTCAAGACAAGGAAGGTATCCCTCCAGATCAACAAAGATTGATCTTTGCCGGTAAGCAGCTAGAAGACGGTAGAACGCTGTCTGATTACAACATTCAGAAGGAGTCCACCTTACATCTTGTGCTAAGGCTAAGAGGTGGTATG'
 
+  # Get pkls
   translate = pic.load(open("translate.pkl","rb"))
   A2N = pic.load(open("aa_to_num_sorted.pkl", "rb"))
 
+  # Establish output lists
   stop_med_var = []
   wt_med_var = []
-  #check position indices
+
+  # Iterate through position indices, find STOP codons at that position, make list of 
+  # tuples [(fitness score, iterator),..], make list of fitness vals, append (median )
   for pos in range(p):
     dict_barcodes = fit_matrix[pos][A2N['STOP']]
     fit_tup = [(k, dict_barcodes[k]) for k in dict_barcodes]
     scores = [x[1] for x in fit_tup]
     stop_med_var.append((np.median(scores), get_mad(dict_barcodes)))
+    print scores[1:10]
 
     cod = wtseq[pos*3:pos*3+3].replace('T', 'U')
     wt_at_pos = translate[cod]
