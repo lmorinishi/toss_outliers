@@ -59,27 +59,36 @@ def find_var_stop_wt(pos_codon_file):
 def remove_all_outliers(pos_codon_file, cutoff = 3):
   wtseq = 'ATGCAGATTTTCGTCAAGACTTTGACCGGTAAAACCATAACATTGGAAGTTGAATCTTCCGATACCATCGACAACGTTAAGTCGAAAATTCAAGACAAGGAAGGTATCCCTCCAGATCAACAAAGATTGATCTTTGCCGGTAAGCAGCTAGAAGACGGTAGAACGCTGTCTGATTACAACATTCAGAAGGAGTCCACCTTACATCTTGTGCTAAGGCTAAGAGGTGGTATG'
 
+  # Load up necessary pkls
   translate = pic.load(open("translate.pkl","rb"))
   codon_dic = pic.load(open('codon_ypos.pkl', "rb"))
   A2N = pic.load(open("aa_to_num_sorted.pkl", "rb"))
 
+  # Establish output lists
   clean_barcodes = []
   dirty_barcodes = []
-
+  
+  # Establish fitness matrix, # aa, # codons, wt sequence
   fit_matrix = pos_codon_file
-  p, codon = np.shape(fit_matrix)
-  #check position indices
+  p, num_codons = np.shape(fit_matrix)
+  
+  # Iterate through position indices
   for pos in range(p):
 
-
+    # Convert WT DNA to RNA to AA to #
     cod = wtseq[pos*3:pos*3+3].replace('T', 'U')
     wt_at_pos = translate[cod]
     aa_pos = A2N[wt_at_pos]
+
+    # Find WT barcodes, get MAD
     wt_barcodes = fit_matrix[pos][aa_pos]
     wt_mad = get_mad(wt_barcodes)
 
-    for c in range(codon):
+    # Iterate through possible codons
+    for c in range(num_codons):
       dict_barcodes = fit_matrix[pos][c]
+
+      # Toss outliers if number of barcodes per codon is high enough
       if len(dict_barcodes) > cutoff:
         clean, dirty = get_outliers(dict_barcodes, wt_mad)
         clean_barcodes = clean_barcodes + clean.keys()
@@ -91,17 +100,21 @@ def remove_all_outliers(pos_codon_file, cutoff = 3):
   return clean_barcodes, dirty_barcodes
 
 
-#COMPUTES A HEATMAP WITH THE DIFFERENCE IN VARIANCE BETWEEN 
+# COMPUTES A HEATMAP WITH THE DIFFERENCE IN VARIANCE  
 def var_heatmap(pos_codon_file, cutoff=3):
   wtseq = 'ATGCAGATTTTCGTCAAGACTTTGACCGGTAAAACCATAACATTGGAAGTTGAATCTTCCGATACCATCGACAACGTTAAGTCGAAAATTCAAGACAAGGAAGGTATCCCTCCAGATCAACAAAGATTGATCTTTGCCGGTAAGCAGCTAGAAGACGGTAGAACGCTGTCTGATTACAACATTCAGAAGGAGTCCACCTTACATCTTGTGCTAAGGCTAAGAGGTGGTATG'
 
+  # Load relevant pkls
   A2N = pic.load(open("aa_to_num_sorted.pkl", "rb"))
   translate = pic.load(open("translate.pkl","rb"))
   codon_dic = pic.load(open('codon_ypos.pkl', "rb"))
   r_codon_dic = dict(zip(codon_dic.values(), codon_dic.keys()))
 
+  # rename position file and get #positions, #codons
   fit_matrix = pos_codon_file
   p, codon = np.shape(fit_matrix)
+
+  # Makes an empty matrix qxq
   q = 21
   fit_aa_before = [[[] for a in range(q)] for pos in range(p)] 
   fit_aa_after = [[[] for a in range(q)] for pos in range(p)]
@@ -150,14 +163,12 @@ def var_heatmap(pos_codon_file, cutoff=3):
 
   return fit_var_before, fit_var_after
 
+# Get MAD of fitness scores. Expects dict {barcode:fitness}
 def get_mad(fitness_scores):
-  fit_tup = [(k, fitness_scores[k]) for k in fitness_scores]
-  scores = [x[1] for x in fit_tup]
-
+  scores = [fitness_scores[x] for x in fitness_scores]
   scores = np.array(scores)
   #calculate MAD
   med = np.median(scores)
-
   mad = 1.4826*np.median(abs(np.subtract(scores, med)))
   return mad
 
