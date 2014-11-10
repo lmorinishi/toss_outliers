@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 # cd to file + dependencies
 # python toss_outliers_v2.py your_fitness_pkl.pkl
 
-# Find the variance of the stop and wt codon fitness values
+# Find the med and MAD of the stop and wt codon fitness values
 def find_var_stop_wt(pos_codon_file):
   # Establish fitness matrix, # aa, # codons, wt sequence
   fit_matrix = pos_codon_file
@@ -32,7 +32,7 @@ def find_var_stop_wt(pos_codon_file):
   wt_med_var = []
 
   # Iterate through position indices, find STOP codons at that position, make list of 
-  # fitness vals, append to output list (median, mad)
+  # fitness vals, append to output list (median)
   for pos in range(p):
     dict_barcodes = fit_matrix[pos][A2N['STOP']]
     stop_scores = [dict_barcodes[k] for k in dict_barcodes]
@@ -174,9 +174,12 @@ def get_mad(fitness_scores):
 
 
 def get_outliers(fitness_scores, mad, thresh=2.5):
-  scores = [fitness_scores[x] for x in fitness_scores]
+  
+  fit_tup = [(k, fitness_scores[k]) for k in fitness_scores]
+  scores = [x[1] for x in fit_tup]
+
   scores = np.array(scores)
-  # 
+  #calculate MAD
   med = np.median(scores)
 
   # mad = 1.4826*np.median(abs(np.subtract(scores, med)))
