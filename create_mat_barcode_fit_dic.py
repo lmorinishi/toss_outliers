@@ -37,11 +37,11 @@ def create_mat_barcode_fit_dic(pkl_to_use_path):
             if not(barcode_mut_dict[barcode][1] == 'WT'):
                 cod = barcode_mut_dict[barcode][1]
                 aa_for_cod = translate[cod.replace('T', 'U')]
-                codon_matrix[pos-1][aa[aa_for_cod]][barcode] = fitness
+                codon_matrix[pos-1][aa[aa_for_cod]][barcode] = fitness[0]
             else: 
                 cod = wtseq[pos*3:pos*3+3].replace('T', 'U')
                 aa_for_cod = translate[cod]
-                codon_matrix[pos][aa[aa_for_cod]][barcode] = fitness
+                codon_matrix[pos][aa[aa_for_cod]][barcode] = fitness[0]
             
     return codon_matrix
 

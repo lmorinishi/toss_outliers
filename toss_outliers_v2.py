@@ -176,7 +176,7 @@ def get_mad(fitness_scores):
 def get_outliers(fitness_scores, mad, thresh=2.5):
   
   fit_tup = [(k, fitness_scores[k]) for k in fitness_scores]
-  scores = fitness_scores.values()
+  scores = [x[1] for x in fit_tup]
 
   scores = np.array(scores)
   #calculate MAD
