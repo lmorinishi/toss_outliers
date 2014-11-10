@@ -35,7 +35,7 @@ def find_var_stop_wt(pos_codon_file):
   # fitness vals, append to output list (median)
   for pos in range(p):
     dict_barcodes = fit_matrix[pos][A2N['STOP']]
-    stop_scores = [dict_barcodes[k] for k in dict_barcodes]
+    stop_scores = dict_barcodes.values()
     stop_med_var.append((np.median(stop_scores), get_mad(dict_barcodes)))
 
     # At position, convert DNA to RNA, and translate to aa
@@ -45,7 +45,7 @@ def find_var_stop_wt(pos_codon_file):
 
     # Find WT codons at position, make list of tuples as above
     wt_barcodes = fit_matrix[pos][aa_pos]
-    wt_scores = [wt_barcodes[x] for x in wt_barcodes]
+    wt_scores = wt_barcodes.values()
     wt_med_var.append((np.median(wt_scores), get_mad(wt_barcodes)))
 
   # wt_med_list = [item[0] for item in wt_med_var]
@@ -165,7 +165,7 @@ def var_heatmap(pos_codon_file, cutoff=3):
 
 # Get MAD of fitness scores. Expects dict {barcode:fitness}
 def get_mad(fitness_scores):
-  scores = [fitness_scores[x] for x in fitness_scores]
+  scores = fitness_scores.values()
   scores = np.array(scores)
   #calculate MAD
   med = np.median(scores)
@@ -176,7 +176,7 @@ def get_mad(fitness_scores):
 def get_outliers(fitness_scores, mad, thresh=2.5):
   
   fit_tup = [(k, fitness_scores[k]) for k in fitness_scores]
-  scores = [x[1] for x in fit_tup]
+  scores = fitness_scores.values()
 
   scores = np.array(scores)
   #calculate MAD
