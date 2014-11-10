@@ -32,7 +32,7 @@ def find_var_stop_wt(pos_codon_file):
   wt_med_var = []
 
   # Iterate through position indices, find STOP codons at that position, make list of 
-  # tuples [(fitness score, iterator),..], make list of fitness vals, append (median )
+  # fitness vals, append to output list (median, mad)
   for pos in range(p):
     dict_barcodes = fit_matrix[pos][A2N['STOP']]
     stop_scores = [dict_barcodes[k] for k in dict_barcodes]
@@ -174,12 +174,9 @@ def get_mad(fitness_scores):
 
 
 def get_outliers(fitness_scores, mad, thresh=2.5):
-  
-  fit_tup = [(k, fitness_scores[k]) for k in fitness_scores]
-  scores = [x[1] for x in fit_tup]
-
+  scores = [fitness_scores[x] for x in fitness_scores]
   scores = np.array(scores)
-  #calculate MAD
+  # 
   med = np.median(scores)
 
   # mad = 1.4826*np.median(abs(np.subtract(scores, med)))
