@@ -35,22 +35,23 @@ def find_var_stop_wt(pos_codon_file):
   # tuples [(fitness score, iterator),..], make list of fitness vals, append (median )
   for pos in range(p):
     dict_barcodes = fit_matrix[pos][A2N['STOP']]
-    scores = [dict_barcodes[k] for k in dict_barcodes]
-    stop_med_var.append((np.median(scores), get_mad(dict_barcodes)))
-    print scores[1:10]
+    stop_scores = [dict_barcodes[k] for k in dict_barcodes]
+    stop_med_var.append((np.median(stop_scores), get_mad(dict_barcodes)))
 
+    # At position, convert DNA to RNA, and translate to aa
     cod = wtseq[pos*3:pos*3+3].replace('T', 'U')
     wt_at_pos = translate[cod]
     aa_pos = A2N[wt_at_pos]
-    wt_barcodes = fit_matrix[pos][aa_pos]
-    fit_tup = [(k, wt_barcodes[k]) for k in wt_barcodes]
-    scores = [x[1] for x in fit_tup]
-    wt_med_var.append((np.median(scores), get_mad(wt_barcodes)))
 
-  wt_med_list = [item[0] for item in wt_med_var]
-  wt_var_list = [item[1] for item in wt_med_var]
-  stop_med_list = [item[0] for item in stop_med_var]
-  stop_var_list = [item[1] for item in stop_med_var]
+    # Find WT codons at position, make list of tuples as above
+    wt_barcodes = fit_matrix[pos][aa_pos]
+    wt_scores = [wt_barcodes[x] for x in wt_barcodes]
+    wt_med_var.append((np.median(wt_scores), get_mad(wt_barcodes)))
+
+  # wt_med_list = [item[0] for item in wt_med_var]
+  # wt_var_list = [item[1] for item in wt_med_var]
+  # stop_med_list = [item[0] for item in stop_med_var]
+  # stop_var_list = [item[1] for item in stop_med_var]
 
   return stop_med_var, wt_med_var
 
