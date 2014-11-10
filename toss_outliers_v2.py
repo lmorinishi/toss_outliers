@@ -35,8 +35,7 @@ def find_var_stop_wt(pos_codon_file):
   # tuples [(fitness score, iterator),..], make list of fitness vals, append (median )
   for pos in range(p):
     dict_barcodes = fit_matrix[pos][A2N['STOP']]
-    fit_tup = [(k, dict_barcodes[k]) for k in dict_barcodes]
-    scores = [x[1] for x in fit_tup]
+    scores = [dict_barcodes[k] for k in dict_barcodes]
     stop_med_var.append((np.median(scores), get_mad(dict_barcodes)))
     print scores[1:10]
 
