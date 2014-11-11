@@ -9,3 +9,9 @@
 # Run
 # cd to file + dependencies
 # python toss_outliers_v2.py your_fitness_pkl.pkl
+
+
+# Test fitness of wt barcodes
+# python wt_hist.py your_fitness_pkl.pkl
+# Saves a histogram wt_fitness_hist.png and list of fitness values wt_fitness.txt
+# python distribution-check.py wt_fitness.txt

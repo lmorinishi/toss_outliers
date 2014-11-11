@@ -156,8 +156,8 @@ def var_heatmap(pos_codon_file, cutoff=3):
   ax.set_yticks(np.array(A2N.values())+.5)
   ax.set_yticklabels(A2N.keys())
   ax.set_xlim([0,p])
-  plt.pcolormesh((fit_var_before.T-fit_var_after.T), cmap='Spectral')
-  plt.pcolormesh((fit_var_after.T), cmap='Spectral')
+  plt.pcolor((fit_var_before.T-fit_var_after.T), cmap='Spectral')
+  plt.pcolor((fit_var_after.T), cmap='Spectral')
   plt.colorbar()
   plt.savefig("fitness_variance_heatmap.png")
 
