@@ -3,6 +3,7 @@ import numpy as np
 from create_mat_barcode_fit_dic import *
 import sys
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 
 #input: dictionary of fitness scores corresponding to a codon/position
@@ -34,7 +35,7 @@ def remove_all_outliers(pos_codon_file, cutoff = 6):
 
 
 #COMPUTES A HEATMAP WITH THE DIFFERENCE IN VARIANCE BETWEEN 
-def var_heatmap(pos_codon_file, cutoff=6):
+def var_heatmap(pos_codon_file, cutoff=1):
 
   A2N = pic.load(open("aa_to_num_sorted.pkl", "rb"))
   translate = pic.load(open("translate.pkl","rb"))
@@ -59,8 +60,12 @@ def var_heatmap(pos_codon_file, cutoff=6):
            dirty = clean
 
         am_num = A2N[translate[r_codon_dic[c].replace('T', 'U')]]
-        fit_aa_after[pos][am_num] = fit_aa_after[pos][am_num] + clean.values()
-        fit_aa_before[pos][am_num] = fit_aa_before[pos][am_num] + dict_barcodes.values()
+        for potentialvalue in clean.values():
+          # if not np.isnan(potentialvalue):
+          fit_aa_after[pos][am_num].append(potentialvalue)
+        for potentialvalue in dict_barcodes.values():
+          # if not np.isnan(potentialvalue):
+          fit_aa_before[pos][am_num].append(potentialvalue)
 
   #COMPUTE VARIANCES BY POS AND AA
   fit_var_before = np.zeros((p,q))
@@ -71,17 +76,68 @@ def var_heatmap(pos_codon_file, cutoff=6):
          fit_var_before[pos,a]=np.std(np.array(fit_aa_before[pos][a]))
          fit_var_after[pos,a]=np.std(np.array(fit_aa_after[pos][a]))
 
-
   #PLOT HEATMAP 
+  v = [x/10.0 for x in range(0,4)]
+  w = [x/10.0 for x in range(-1,4)]
+  n = [.5]+list(np.arange(4.5,76.5,5))
+  m = [1]+list(np.arange(5,77,5))
+
   fig = plt.figure()
-  ax = fig.add_subplot(1,1,1, aspect=(.75*p/q))
+  fig.subplots_adjust(hspace=.3)
+  ax = fig.add_subplot(3,1,1, aspect=(.75*p/q))
+
+  ax.set_xticklabels('')
+  plt.gca().xaxis.set_major_locator(plt.NullLocator())
+  ax.tick_params(axis='both', which='minor', labelsize=8)
+  ax.tick_params(axis='both', which='major', labelsize=5)
+  ax.set_xticks(n, minor=True)
+  ax.set_xticklabels(m, minor=True)
   ax.set_yticks(np.array(A2N.values())+.5)
   ax.set_yticklabels(A2N.keys())
   ax.set_xlim([0,p])
-  plt.pcolormesh((fit_var_before.T-fit_var_after.T), cmap='Spectral')
-  plt.colorbar()
-  plt.savefig("fitness_variance_heatmap.png")
+  ax.set_title('Before tossing outliers', fontsize=10)
+  ax.set_aspect('equal')
 
+  plt.pcolormesh((fit_var_before.T), cmap='Spectral', vmin=0, vmax=0.4)
+  cbar = plt.colorbar(orientation='vertical', pad=0.01, ticks=v)
+  cbar.ax.tick_params(labelsize=10) 
+
+  ax2 = fig.add_subplot(3,1,2, aspect=(.75*p/q))
+
+  ax2.tick_params(axis='both', which='minor', labelsize=8)
+  ax2.tick_params(axis='both', which='major', labelsize=5)
+  ax2.set_xticklabels('')
+  plt.gca().xaxis.set_major_locator(plt.NullLocator())
+  ax2.set_xticks(n, minor=True)
+  ax2.set_xticklabels(m, minor=True)
+  ax2.set_yticks(np.array(A2N.values())+.5)
+  ax2.set_yticklabels(A2N.keys())
+  ax2.set_xlim([0,p])
+  ax2.set_title('After tossing outliers', fontsize=10)
+  ax2.set_aspect('equal')
+
+  plt.pcolormesh((fit_var_after.T), cmap='Spectral', vmin=0, vmax=0.4)
+  cbar2 = plt.colorbar(orientation='vertical', pad=0.01, ticks=v)
+  cbar2.ax.tick_params(labelsize=10) 
+
+  ax3 = fig.add_subplot(3,1,3, aspect=(.75*p/q))
+
+  ax3.tick_params(axis='both', which='minor', labelsize=8)
+  ax3.tick_params(axis='both', which='major', labelsize=5)
+  ax3.set_xticklabels('')
+  plt.gca().xaxis.set_major_locator(plt.NullLocator())
+  ax3.set_xticks(n, minor=True)
+  ax3.set_xticklabels(m, minor=True)
+  ax3.set_yticks(np.array(A2N.values())+.5)
+  ax3.set_yticklabels(A2N.keys())
+  ax3.set_xlim([0,p])
+  ax3.set_title('Subtraction of before-after', fontsize=10)
+  ax3.set_aspect('equal')
+
+  plt.pcolormesh((fit_var_before.T-fit_var_after.T), cmap='Spectral')
+  cbar3 = plt.colorbar(orientation='vertical', pad=0.01, ticks=w)
+  cbar3.ax.tick_params(labelsize=10) 
+  plt.savefig("fitness_variance_heatmap.png")
   return fit_var_before, fit_var_after
 
 def get_outliers(fitness_scores, thresh=2.5):
