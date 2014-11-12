@@ -8,7 +8,7 @@
 
 # Run
 # cd to file + dependencies
-# python toss_outliers_v2.py your_fitness_pkl.pkl
+# python toss_outliers_v1.py your_fitness_pkl.pkl
 
 
 # Test fitness of wt barcodes
