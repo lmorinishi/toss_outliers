@@ -60,8 +60,6 @@ def create_fitness_mat(filename, sort_type='codon'):
 			if not codon == 'WT':
 				rna = codon.replace('T','U')
 				aa = translate[rna]
-				if aa == 'M':
-					print 'M!',
 				# wtaa = wtUb[pos-1]
 				# if not aa == wtaa:
 				if not np.isnan(fitness_dict[(pos,codon)][0]):
