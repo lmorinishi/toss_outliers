@@ -12,6 +12,9 @@
 # cd to directory
 # ./run.sh
 # Input barcode cutoff (recommend 4) and codon cutoff (rec 1)
+# Outputs /output/blah_clean_list.pkl
+	# {clean_barcodes:[barcodes], dirty_barcodes[barcodes]} OR
+	# {clean_barcodes:[(pos,aa)], dirty_barcodes[(pos,aa)]}
 
 
 # Test fitness of wt barcodes
