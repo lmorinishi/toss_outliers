@@ -1,5 +1,6 @@
 import cPickle as pic 
 import numpy as np
+import os
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -19,11 +20,11 @@ import matplotlib.ticker as ticker
 def create_fitness_mat(filename, sort_type='codon'):
 
 	# Calling all pkls
-	A2N = pic.load(open('aa_to_num_sorted.pkl',"rb"))
-	bc_mut_dict = pic.load(open('allele_dic_with_WT.pkl',"rb"))
-	translate = pic.load(open('translate.pkl',"rb"))
+	A2N = pic.load(open('pkl/aa_to_num_sorted.pkl',"rb"))
+	bc_mut_dict = pic.load(open('pkl/allele_dic_with_WT.pkl',"rb"))
+	translate = pic.load(open('pkl/translate.pkl',"rb"))
 	fitness_dict = pic.load(open(filename, 'rb'))
-	codon_ypos = pic.load(open('codon_ypos.pkl', 'rb'))
+	codon_ypos = pic.load(open('pkl/codon_ypos.pkl', 'rb'))
 
 	# Save WT Ub aa sequence, obsolete
 	# wtUb = 'MQIFVKTLTGKTITLEVESSDTIDNVKSKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG*'
@@ -71,10 +72,11 @@ def create_fitness_mat(filename, sort_type='codon'):
 # COMPUTES A HEATMAP OF THE DIFFERENCE IN VARIANCE 
 def var_heatmap(fitness_mat, sort_type, cutoff=2):
 
-	A2N = pic.load(open("aa_to_num_sorted.pkl", "rb"))
-	codon_ypos = pic.load(open("codon_ypos.pkl", "rb"))
-	translate = pic.load(open("translate.pkl","rb"))
-	codon_dic = pic.load(open('codon_ypos.pkl', "rb"))
+	A2N = pic.load(open("pkl/aa_to_num_sorted.pkl", "rb"))
+	codon_ypos = pic.load(open("pkl/codon_ypos.pkl", "rb"))
+	translate = pic.load(open("pkl/translate.pkl","rb"))
+	codon_dic = pic.load(open('pkl/codon_ypos.pkl', "rb"))
+	pathname = os.path.split(filename)
 
 	# Determine shape of matrix & make empty lists
 	p, q = np.shape(fitness_mat)
@@ -183,7 +185,12 @@ def var_heatmap(fitness_mat, sort_type, cutoff=2):
 		plt.pcolormesh((fit_var_before.T-fit_var_after.T), cmap='Spectral')
 		cbar3 = plt.colorbar(orientation='vertical', pad=0.01)#, ticks=w)
 		cbar3.ax.tick_params(labelsize=10) 
-		plt.savefig("fitness_variance_by_codon.png")
+		
+		heatmaps_d = os.path.dirname(filename)+'/heatmaps'
+		if not os.path.exists(heatmaps_d):
+			os.makedirs(heatmaps_d)
+
+		plt.savefig(pathname[0]+'/heatmaps/'+pathname[1]+'_fitness_variance_by_codon.png')
 
 	if sort_type == 'codon':
 		p = 77
@@ -238,8 +245,13 @@ def var_heatmap(fitness_mat, sort_type, cutoff=2):
 		ax3.set_aspect('equal')
 		plt.pcolormesh((fit_var_before.T-fit_var_after.T), cmap='Spectral')
 		cbar3 = plt.colorbar(orientation='vertical', pad=0.01)#, ticks=w)
-		cbar3.ax.tick_params(labelsize=10) 
-		plt.savefig("fitness_variance_by_aa.png")
+		cbar3.ax.tick_params(labelsize=10)
+
+		heatmaps_d = os.path.dirname(filename)+'/heatmaps'
+		if not os.path.exists(heatmaps_d):
+			os.makedirs(heatmaps_d)
+
+		plt.savefig(pathname[0]+'/heatmaps/'+pathname[1]+'_fitness_variance_by_aa.png')
 
 	return before_mat, after_mat, clean_list, dirty_list
 
@@ -289,8 +301,15 @@ if __name__ == "__main__":
 	# print x, '\tWTs thrown out'
 
 	# OUTPUT DICT
+	unique_name = filename.split('/')[-1][:-4]
+	fileto = '/'.join(filename.split('/')[:-1])
 	output_dict = {'clean_barcodes':clean_list, 'dirty_barcodes':dirty_list}
-	pic.dump(output_dict, open(filename[:-4]+'_clean_list.pkl', 'w'), protocol=2)
+
+	out_d = os.path.dirname(filename)+'/output'
+	if not os.path.exists(out_d):
+		os.makedirs(out_d)
+
+	pic.dump(output_dict, open(fileto + '/output/' + unique_name + '_clean_list.pkl', 'w'), protocol=2)
 
 
 
