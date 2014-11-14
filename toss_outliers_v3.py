@@ -1,10 +1,8 @@
 import cPickle as pic 
 import numpy as np
-# from create_mat_barcode_fit_dic import *
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-
 
 # Input: dictionary of fitness scores corresponding to a codon or mutation
 	# Either:
@@ -56,13 +54,14 @@ def create_fitness_mat(filename, sort_type='codon'):
 	# If fitness was determined by codon
 	if sort_type == 'codon':
 		q = 21
-
-		# Make Npos x Naa matrix of dictionaries, {barcode:fitness}
+		# Make Npos x Naa matrix of dictionaries, {(pos,codon):fitness}
 		fitness_mat = [[{} for i in range(q)] for j in range(p)]
 		for pos,codon in fitness_dict.keys():
 			if not codon == 'WT':
 				rna = codon.replace('T','U')
 				aa = translate[rna]
+				if aa == 'M':
+					print 'M!',
 				# wtaa = wtUb[pos-1]
 				# if not aa == wtaa:
 				if not np.isnan(fitness_dict[(pos,codon)][0]):

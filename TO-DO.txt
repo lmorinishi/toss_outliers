@@ -1,5 +1,0 @@
-Things to do or clarify:
-
-1. Fitness scores- why are so many amino acids missing values in fitness_variance_heatmap.png ?
-2. Wild Type sequence- seems to be missing a stop codon (toss_outliers_v2.py, create_mat_barcode_fit_dic.py)
-	- fixed this on 11/11/2014, but can someone double check that this is the correct sequence? are there other files where this sequence is present?
