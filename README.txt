@@ -1,6 +1,3 @@
-# input: dictionary of fitness scores corresponding to a codon/position
-# barcode value:[fitness score, standard error, p-value]
-
 # Needs the following pickles in the working folder.
 # translate.pkl, codon_ypos.pkl, aa_to_num_sorted.pkl, allele_dic_with_WT.pkl
 
@@ -14,6 +11,8 @@
 # python toss_outliers_v3.py pickle.pkl sort_type cutoff
 # where sort_type should be either 'barcode' or 'codon'
 # where cutoff should be an int, probably 4 for barcode and 0 for codon
+# outputs dict {clean_barcodes:[barcode], dirty_barcodes:[barcode]} for sort_type=barcode
+# outputs dict {clean_barcodes:[(pos, aa)], dirty_barcodes:[(pos, aa)]} for sort_type=codon
 
 
 # Test fitness of wt barcodes
