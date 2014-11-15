@@ -314,7 +314,6 @@ if __name__ == "__main__":
 		# txt file: pkl_file clean_counts dirty_counts
 		newline = [pathname[1], str(len(clean_list)), str(len(dirty_list))]
 		catline = '\t'.join(newline)
-		print catline
 		tossfile.write(catline+'\n')
 
 
