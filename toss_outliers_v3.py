@@ -48,6 +48,7 @@ def create_fitness_mat(filename, sort_type='codon'):
 				# if not aa == wtaa:
 				if not np.isnan(fitness_dict[barcode][0]):
 					fitness_mat[pos-1][codon_ypos[codon]][barcode] = fitness_dict[barcode][0]
+					print fitness_dict[barcode][-1]
 				else:
 					print fitness_dict[barcode],
 		return fitness_mat

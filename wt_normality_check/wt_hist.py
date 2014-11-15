@@ -15,9 +15,9 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
   filename = sys.argv[1]
 
-  A2N = pic.load(open("aa_to_num_sorted.pkl", "rb"))
-  translate = pic.load(open("translate.pkl","rb"))
-  codon_dic = pic.load(open('codon_ypos.pkl', "rb"))
+  A2N = pic.load(open("pkl/aa_to_num_sorted.pkl", "rb"))
+  translate = pic.load(open("pkl/translate.pkl","rb"))
+  codon_dic = pic.load(open('pkl/codon_ypos.pkl', "rb"))
 
   #get matrix 
   fitness_mat = create_mat_barcode_fit_dic(filename)
