@@ -13,8 +13,8 @@
 # ./run2.sh
 # Input barcode cutoff (recommend 4) and codon cutoff (rec 1)
 # Outputs /output/blah_clean_list.pkl
-	# {clean_barcodes:[barcodes], dirty_barcodes[barcodes]} OR
-	# {clean_barcodes:[(pos,aa)], dirty_barcodes[(pos,aa)]}
+	# {clean_barcodes:[barcodes], dirty_barcodes:[barcodes]} OR
+	# {clean_barcodes:[(pos,aa)], dirty_barcodes:[(pos,aa)]}
 # Also writes number of “clean” and “dirty (outlier)” barcodes in list_counts.txt
 
 
