@@ -301,17 +301,21 @@ if __name__ == "__main__":
 	# print x, '\tWTs thrown out'
 
 	# OUTPUT DICT
-	unique_name = filename.split('/')[-1][:-4]
-	fileto = '/'.join(filename.split('/')[:-1])
+	pathname = os.path.split(filename)
+
 	output_dict = {'clean_barcodes':clean_list, 'dirty_barcodes':dirty_list}
 
-	out_d = os.path.dirname(filename)+'/output'
+	out_d = os.path.dirname(filename)+'/output/'
 	if not os.path.exists(out_d):
 		os.makedirs(out_d)
+	pic.dump(output_dict, open(out_d + pathname[1] + '_clean_list.pkl', 'w'), protocol=2)
 
-	pic.dump(output_dict, open(fileto + '/output/' + unique_name + '_clean_list.pkl', 'w'), protocol=2)
-
-
+	with open(out_d+'list_counts.txt', 'a') as tossfile:
+		# txt file: pkl_file clean_counts dirty_counts
+		newline = [pathname[1], str(len(clean_list)), str(len(dirty_list))]
+		catline = '\t'.join(newline)
+		print catline
+		tossfile.write(catline+'\n')
 
 
 

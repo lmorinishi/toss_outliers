@@ -15,6 +15,7 @@
 # Outputs /output/blah_clean_list.pkl
 	# {clean_barcodes:[barcodes], dirty_barcodes[barcodes]} OR
 	# {clean_barcodes:[(pos,aa)], dirty_barcodes[(pos,aa)]}
+# Also writes number of “clean” and “dirty (outlier)” barcodes in list_counts.txt
 
 
 # Test fitness of wt barcodes
