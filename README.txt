@@ -3,20 +3,18 @@
 
 # Needs pkls to be analyzed in fitness folder.
 
-# Input: dictionary of fitness scores corresponding to a codon or mutation
-	# Either:
+# Input: dictionary of fitness scores in the following format
 	# {barcode:[fitness, stde, pval, rval]}
-	# {(pos,codon):[fitness, stde, pval, rval]}
 
 # Run
 # cd to directory
-# ./run2.sh
-# Input barcode cutoff (recommend 4) and codon cutoff (rec 1)
-# Outputs /output/blah_clean_list.pkl
-	# {clean_barcodes:[barcodes], dirty_barcodes:[barcodes]} OR
-	# {clean_barcodes:[(pos,aa)], dirty_barcodes:[(pos,aa)]}
-# Also writes number of “clean” and “dirty (outlier)” barcodes in list_counts.txt
+# run python toss_outliers_aa.py <input_pkl> <cutoff> <output_directory_with_slash>
+#EXAMPLE: python toss_outliers_aa.py fitness/Barcode_FitScore_Caffiene_day1.pkl 5 /Users/ipqb/Documents/Fall-2014/PUBS/barcode-reproducibility/
 
+# Outputs /output/blah_clean_list.pkl
+	# {clean_barcodes:[barcodes], dirty_barcodes:[barcodes]} 
+#Also outputs some plots to/heatmap/
+# Also writes number of “clean” and “dirty (outlier)” barcodes in list_counts.txt
 
 # Test fitness of wt barcodes
 # python wt_hist.py your_fitness_pkl.pkl
