@@ -18,3 +18,4 @@ Codon_FitScore_HU_day1.pkl	2521	1416
 Codon_FitScore_HU_day2.pkl	2584	1407
 Codon_FitScore_MG132_day1.pkl	2622	1369
 Codon_FitScore_MG132_day2.pkl	2614	1313
+Barcode_FitScore_MG132_day1.pkl	73791	12161
